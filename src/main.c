@@ -43,11 +43,13 @@ int main(void)
   CURL *curl;
   CURLcode res;
   FILE *headerfile;
+  FILE *pngfile;
   const char *pPassphrase = NULL;
  
   static const char *pCertFile = "clientcert.pem";
 //  static const char *pCACertFile = "cacert.pem";
   static const char *pHeaderFile = "dumpit";
+  static const char *pPngFile = "downloaded.png";
  
   const char *pKeyName;
   const char *pKeyType;
@@ -65,6 +67,7 @@ int main(void)
 #endif
  
   headerfile = fopen(pHeaderFile, "wb");
+  pngfile = fopen(pPngFile, "wb");
  
   curl_global_init(CURL_GLOBAL_DEFAULT);
  
@@ -115,6 +118,8 @@ int main(void)
       /* disconnect if we can't validate server's cert */ 
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
       curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L); 
+      curl_easy_setopt(curl, CURLOPT_HEADER, 0L);
+      curl_easy_setopt(curl, CURLOPT_WRITEDATA, pngfile);
       /* Perform the request, res will get the return code */ 
       res = curl_easy_perform(curl);
       /* Check for errors */ 
